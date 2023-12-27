@@ -2472,6 +2472,30 @@ static const struct panel_desc tpk_f10a_0102 = {
 	},
 };
 
+static const struct drm_display_mode atk_atk7inch_1024x600_mode = {
+	.clock = 51200,
+    .hdisplay = 1024,
+    .hsync_start = 1024 + 140,
+    .hsync_end = 1024 + 140 + 20,
+    .htotal = 1024 + 140 + 20 + 160,
+    .vdisplay = 600,
+    .vsync_start = 600 + 20,
+    .vsync_end = 600 + 20 + 3,
+    .vtotal = 600 + 20 + 3 + 12,
+    .vrefresh = 60,
+};
+
+static const struct panel_desc atk_atk7inch_1024x600 = {
+	.modes = &atk_atk7inch_1024x600_mode,
+	.num_modes = 1,
+	.bpc = 8,
+	// .size = {
+	// 	.width = 70,
+	// 	.height = 53,
+	// },
+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+};
+
 static const struct display_timing urt_umsh_8596md_timing = {
 	.pixelclock = { 33260000, 33260000, 33260000 },
 	.hactive = { 800, 800, 800 },
@@ -2819,6 +2843,9 @@ static const struct of_device_id platform_of_match[] = {
 	}, {
 		.compatible = "urt,umsh-8596md-t",
 		.data = &urt_umsh_8596md_parallel,
+	}, {
+		.compatible = "atk,atk7_inch_1024x600",
+		.data = &atk_atk7inch_1024x600,
 	}, {
 		.compatible = "urt,umsh-8596md-1t",
 		.data = &urt_umsh_8596md_parallel,

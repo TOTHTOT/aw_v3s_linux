@@ -43,6 +43,7 @@
 /dts-v1/;
 #include "sun8i-v3s.dtsi"
 #include "sunxi-common-regulators.dtsi"
+#include <dt-bindings/input/input.h>
 
 / {
 	model = "Lichee Pi Zero";
@@ -50,30 +51,26 @@
 
 	aliases {
 		serial0 = &uart0;
+        ethernet0 = &emac;
 	};
 
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
 
-	leds {
-		compatible = "gpio-leds";
-
-		blue_led {
-			label = "licheepi:blue:usr";
-			gpios = <&pio 6 1 GPIO_ACTIVE_LOW>; /* PG1 */
-		};
-
-		green_led {
-			label = "licheepi:green:usr";
-			gpios = <&pio 6 0 GPIO_ACTIVE_LOW>; /* PG0 */
-			default-state = "on";
-		};
-
-		red_led {
-			label = "licheepi:red:usr";
-			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
-		};
+	rgb_leds {
+		compatible = "tothtot,rgb_leds";
+        status = "okay";
+        gpio_rgbleds = <&pio 6 1 GPIO_ACTIVE_LOW>,  // blue_led
+                     <&pio 6 0 GPIO_ACTIVE_LOW>,    // green_led
+                     <&pio 6 2 GPIO_ACTIVE_LOW>;    // red_led
+         default-direction = "out";
+	};
+	dht11 {
+		compatible = "tothtot,dht11";
+        status = "okay";
+        gpio_dht11 = <&pio 6 3 GPIO_ACTIVE_HIGH>;  // dht11 PG3
+        default-direction = "out";
 	};
 };
 
@@ -90,11 +87,29 @@
 
 &i2c0 {
 	status = "okay";
-
+	clock-frequency = <400000>;	// 设置速率400khz
 	ns2009: ns2009@48 {
 		compatible = "nsiway,ns2009";
 		reg = <0x48>;
 	};
+  
+    // ssd1306:ssd1306@3c{
+    //     compatible ="solomon,ssd1306fb-i2c";
+    //     reg = <0x3c>;
+    //     solomon,width = <128>;
+    //     solomon,height= <64>;
+    //     solomon,page-offset = <0>;
+    //     reset-wgpios = <&pio 1 2 GPIO_ACTIVE_LOW>;
+    // };
+    
+    oled_0_96: oled_0_96@3c {
+		compatible = "tothtot,oled_0_96";
+        reg = <0x3c>;
+    };
+	bh1750: bh1750@23 {
+    compatible = "rohm,bh1750";
+    reg = <0x23>;
+  };
 };
 
 &ohci0 {
@@ -115,4 +130,45 @@
 &usbphy {
 	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+};
+
+&emac {
+       phy-handle = <&int_mii_phy>;
+       phy-mode = "mii";
+       allwinner,leds-active-low;
+       status = "okay";
+};
+
+// 开启 lradc 用于检测案件是否按下, 需要包含 #include <dt-bindings/input/input.h>
+&lradc {
+	vref-supply = <&reg_vcc3v0>;
+	status = "okay";
+
+	button-200 {
+		label = "Volume Up";
+		linux,code = <KEY_VOLUMEUP>;
+		channel = <0>;
+		voltage = <200000>;
+	};
+
+	button-400 {
+		label = "Volume Down";
+		linux,code = <KEY_VOLUMEDOWN>;
+		channel = <0>;
+		voltage = <400000>;
+	};
+
+	button-600 {
+		label = "Select";
+		linux,code = <KEY_SELECT>;
+		channel = <0>;
+		voltage = <600000>;
+	};
+
+	button-800 {
+		label = "Start";
+		linux,code = <KEY_OK>;
+		channel = <0>;
+		voltage = <800000>;
+	};
 };

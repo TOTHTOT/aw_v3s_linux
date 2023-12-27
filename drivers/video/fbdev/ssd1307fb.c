@@ -325,6 +325,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
 
 	/* Set segment re-map */
 	if (par->seg_remap) {
+		// 修改为0xa1 以及0xc8使屏幕旋转
 		ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SEG_REMAP_ON);
 		if (ret < 0)
 			return ret;
@@ -332,7 +333,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
 
 	/* Set COM direction */
 	com_invdir = 0xc0 | (par->com_invdir & 0x1) << 3;
-	ret = ssd1307fb_write_cmd(par->client,  com_invdir);
+	ret = ssd1307fb_write_cmd(par->client,  0xc8);
 	if (ret < 0)
 		return ret;
 

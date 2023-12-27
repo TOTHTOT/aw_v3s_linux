@@ -362,7 +362,9 @@ include scripts/subarch.include
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 ARCH		?= $(SUBARCH)
-
+ARCH = arm
+CROSS_COMPILE   = arm-linux-gnueabihf-
+INSTALL_MOD_PATH = out
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
 SRCARCH 	:= $(ARCH)

@@ -89,6 +89,7 @@
 	status = "okay";
 	clock-frequency = <400000>;	// 设置速率400khz
 	ns2009: ns2009@48 {
+        status = "okay";
 		compatible = "nsiway,ns2009";
 		reg = <0x48>;
 	};
@@ -171,4 +172,23 @@
 		channel = <0>;
 		voltage = <800000>;
 	};
+};
+
+&spi0{
+    status = "okay";
+    st7789v: st7789v@0{
+        compatible = "sitronix,st7789v";
+        reg = <0>;
+        status = "disable";
+        spi-max-frequency = <96000000>;
+        spi-cpol;
+        spi-cpha;
+        rotate = <270>;
+        fps = <60>;
+        buswidth = <8>;
+        dc-gpios = <&pio 4 21 GPIO_ACTIVE_HIGH>;  // PE22
+        reset-gpios = <&pio 1 0 GPIO_ACTIVE_HIGH>; // PB5
+        led-gpios = <&pio 4 20 GPIO_ACTIVE_HIGH>;  // PA0
+        debug = <0x0>;
+        };
 };
